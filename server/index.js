@@ -7,7 +7,7 @@ const app=express()
 
 dotenv.config()
 app.use(express.json())
-app.use(route)
+app.use('/api/auth',route)
 
 
 
