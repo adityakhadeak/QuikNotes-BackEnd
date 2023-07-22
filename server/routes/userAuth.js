@@ -1,18 +1,40 @@
 import express from "express";
-import { userControll } from "../controllers/userControll.js";
-import { body} from 'express-validator'
-const route=express.Router()
+import User from "../models/UserModel.js"
+import { userControll } from "../controllers/userControl.js";
+import { body } from 'express-validator'
+import loginControl from "../controllers/loginControl.js";
+import fetchUser from "../middleware/fetchUser.js";
+const route = express.Router()
 
-route.post('/createuser',[
-    body('name',"Name should be of atleast of 2 chars").isLength({ min: 2 }),
-    body('email',"Please check your Email").isEmail(),
-    body('password',"Password should be of atleast 5 char").isLength({ min: 5 })
-  ],userControll)
+//Creating a user using a Post request
+route.post('/createuser', [
+  body('name', "Name should be of atleast of 2 chars").isLength({ min: 2 }),
+  body('email', "Please check your Email").isEmail(),
+  body('password', "Password should be of atleast 5 char").isLength({ min: 5 })
+], userControll)
+
+//Creating a endpoint for login
+route.post('/login', [
+  body('email', "Please check your Email").isEmail(),
+  body('password', "Please check your Password").exists()
+], loginControl)
+
+//Getting the info of loggedin user 
+route.post('/getuser', fetchUser, async (req, res) => {
+  try {
+    const userId = req.user.id
+    const user = await User.findById(userId).select('-password')
+    res.send(user)
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({
+      message: "Internal server error"
+    })
+  }
+})
 
 
-route.post('/login',[
-    body('email',"Please check your Email").isEmail(),
-    body('password',"Please check your Password").exists()
-  ],userControll)
-  
+
+
+
 export default route
