@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/UserModel.js"
+import Notes from "../models/NotesModel.js";
 import { userControll } from "../controllers/userControl.js";
 import { body } from 'express-validator'
 import loginControl from "../controllers/loginControl.js";
@@ -37,7 +38,10 @@ route.delete('/deleteuser',fetchUser,async(req,res)=>{
   try {
     const userId=req.user.id
     const userDeleted=await User.findByIdAndDelete(userId)
+    const notes= await  Notes.deleteMany({user:userId})
+    
     res.json({'success':true,userDeleted})
+
   } catch (error) {
     console.log(error.message)
     res.status(400).json({
