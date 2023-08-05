@@ -16,7 +16,7 @@ route.post('/createuser', [
 //Creating a endpoint for login
 route.post('/login', [
   body('email', "Please check your Email").isEmail(),
-  body('password', "Please check your Password").exists()
+  body('password', "Please check your Password").isLength({ min: 5 })
 ], loginControl)
 
 //Getting the info of loggedin user 

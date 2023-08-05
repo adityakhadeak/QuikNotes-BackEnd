@@ -3,11 +3,12 @@ import connectToDB from './database/db.js'
 import dotenv from 'dotenv'
 import route from './routes/userAuth.js'
 import route2 from './routes/notes.js'
-
+import cors from 'cors'
 const app=express()
 
 dotenv.config()
 app.use(express.json())
+app.use(cors())
 app.use('/api/auth',route)
 app.use('/api/note',route2)
 
