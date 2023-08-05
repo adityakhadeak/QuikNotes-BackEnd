@@ -33,6 +33,19 @@ route.post('/getuser', fetchUser, async (req, res) => {
   }
 })
 
+route.delete('/deleteuser',fetchUser,async(req,res)=>{
+  try {
+    const userId=req.user.id
+    const userDeleted=await User.findByIdAndDelete(userId)
+    res.json({'success':true,userDeleted})
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({
+      message: "Internal server error"
+    })
+  }
+})
+
 
 
 
